@@ -10,4 +10,6 @@
     <string name="enrollment_confirmation_message">Are you sure you want to enroll as %1$s for %2$s?</string>
     <string name="enrollment_confirmation_tap">Tap to enroll</string>
     <string name="enrollment_summary_message">You\'ve been successfully enrolled as %1$s for %2$s</string>
+
+    <string name="authenticate_voice_trigger">authenticate</string>
 </resources>
