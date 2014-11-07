@@ -5,7 +5,7 @@ import android.content.Context;
 import org.tiqr.glass.authentication.AuthenticationConfirmationActivity;
 import org.tiqr.glass.authentication.AuthenticationIdentitySelectActivity;
 import org.tiqr.glass.enrollment.EnrollmentConfirmationActivity;
-import org.tiqr.glass.scan.ScanActivity;
+import org.tiqr.glass.main.MainActivity;
 
 import javax.inject.Singleton;
 
@@ -19,7 +19,7 @@ import dagger.Provides;
 @Module(
         injects = {
                 Application.class,
-                ScanActivity.class,
+                MainActivity.class,
                 EnrollmentConfirmationActivity.class,
                 AuthenticationIdentitySelectActivity.class,
                 AuthenticationConfirmationActivity.class

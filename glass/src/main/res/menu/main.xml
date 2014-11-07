@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/identities"
+        android:title="@string/menu_manage_identities"
+        android:icon="@drawable/ic_glass_logo" />
+    <item
+        android:id="@+id/about"
+        android:title="@string/menu_about"
+        android:icon="@drawable/ic_glass_logo" />
+
+</menu>

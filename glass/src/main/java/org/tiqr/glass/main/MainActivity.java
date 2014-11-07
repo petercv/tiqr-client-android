@@ -1,4 +1,4 @@
-package org.tiqr.glass.scan;
+package org.tiqr.glass.main;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,26 +7,30 @@ import android.graphics.Rect;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 
 import com.google.android.glass.media.Sounds;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.camera.CameraConfigurationUtils;
 import com.google.zxing.client.result.ParsedResult;
-import com.google.zxing.client.result.ParsedResultType;
 
 import org.tiqr.authenticator.auth.AuthenticationChallenge;
 import org.tiqr.authenticator.auth.EnrollmentChallenge;
 import org.tiqr.glass.Application;
+import org.tiqr.glass.about.AboutActivity;
 import org.tiqr.glass.authentication.AuthenticationIdentitySelectActivity;
 import org.tiqr.glass.general.ErrorActivity;
 import org.tiqr.glass.R;
 import org.tiqr.glass.authentication.AuthenticationConfirmationActivity;
 import org.tiqr.glass.enrollment.EnrollmentConfirmationActivity;
+import org.tiqr.glass.identity.IdentityAdminActivity;
 import org.tiqr.scan.ScanHelper;
 import org.tiqr.scan.ViewfinderView;
 import org.tiqr.service.authentication.AuthenticationService;
@@ -41,7 +45,7 @@ import javax.inject.Inject;
 /**
  * Scanner.
  */
-public final class ScanActivity extends Activity implements ScanHelper.OnScanListener {
+public final class MainActivity extends Activity implements ScanHelper.OnScanListener {
     private final static int CAMERA_PREVIEW_WIDTH = 1280;
     private final static int CAMERA_PREVIEW_HEIGHT = 720;
     private final static int CAMERA_ZOOM = 2;
@@ -71,6 +75,41 @@ public final class ScanActivity extends Activity implements ScanHelper.OnScanLis
 
         TextureView previewView = (TextureView)findViewById(R.id.preview);
         _captureManager = new ScanHelper(previewView, this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.identities:
+                startActivity(new Intent(this, IdentityAdminActivity.class));
+                return true;
+            case R.id.about:
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            openOptionsMenu();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -180,9 +219,9 @@ public final class ScanActivity extends Activity implements ScanHelper.OnScanLis
 
                 Intent intent;
                 if (challenge.getIdentity() == null) {
-                    intent = AuthenticationIdentitySelectActivity.createIntent(ScanActivity.this, challenge);
+                    intent = AuthenticationIdentitySelectActivity.createIntent(MainActivity.this, challenge);
                 } else {
-                    intent = AuthenticationConfirmationActivity.createIntent(ScanActivity.this, challenge);
+                    intent = AuthenticationConfirmationActivity.createIntent(MainActivity.this, challenge);
                 }
 
                 startActivity(intent);
@@ -191,7 +230,7 @@ public final class ScanActivity extends Activity implements ScanHelper.OnScanLis
             @Override
             public void onParseAuthenticationChallengeError(ParseAuthenticationChallengeError error) {
                 _progressView.setVisibility(View.GONE);
-                Intent intent = ErrorActivity.createIntent(ScanActivity.this, error.getMessage());
+                Intent intent = ErrorActivity.createIntent(MainActivity.this, error.getMessage());
                 startActivity(intent);
             }
         });
@@ -207,14 +246,14 @@ public final class ScanActivity extends Activity implements ScanHelper.OnScanLis
             @Override
             public void onParseEnrollmentChallengeSuccess(EnrollmentChallenge challenge) {
                 _progressView.setVisibility(View.GONE);
-                Intent intent = EnrollmentConfirmationActivity.createIntent(ScanActivity.this, challenge);
+                Intent intent = EnrollmentConfirmationActivity.createIntent(MainActivity.this, challenge);
                 startActivity(intent);
             }
 
             @Override
             public void onParseEnrollmentChallengeError(ParseEnrollmentChallengeError error) {
                 _progressView.setVisibility(View.GONE);
-                Intent intent = ErrorActivity.createIntent(ScanActivity.this, error.getMessage());
+                Intent intent = ErrorActivity.createIntent(MainActivity.this, error.getMessage());
                 startActivity(intent);
             }
         });
